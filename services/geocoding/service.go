@@ -27,7 +27,6 @@ func (s service) Geocode(ctx context.Context, req *pb.GeocodeRequest) (*pb.Geoco
 	}
 	if len(results) < 1 {
 		return nil, errors.New("No results for " + req.Location)
-
 	}
 
 	result := results[0]
