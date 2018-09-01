@@ -18,7 +18,7 @@ proto:
 
 build:
 	for CMD in `ls cmd/services`; do $(BUILD) -o bin/$$CMD-service-$(VERSION) ./cmd/services/$$CMD; done
-	for CMD in `ls cmd/listeners`; do $(BUILD) -o bin/$$CMD-listener-$(VERSION) ./cmd/listeners/$$CMD; done
+	# for CMD in `ls cmd/listeners`; do $(BUILD) -o bin/$$CMD-listener-$(VERSION) ./cmd/listeners/$$CMD; done
 
 clean:
 	find bin -type f ! -name '*.toml' -delete -print
