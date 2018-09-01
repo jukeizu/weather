@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package weather;
+
+service Weather {
+    rpc Weather(WeatherRequest) returns (WeatherReply) {}
+}
+
+message WeatherRequest {
+    int64 time = 1;
+    string location = 2;
+    string units = 3;
+}
+
+message WeatherReply {
+    string location = 1;
+    double Latitude = 2;
+    double Longitude = 3;
+    Currently currently = 4;
+    Forecast forecast = 5;
+    repeated Alert alerts = 6;
+}
+
+message Currently {
+    string description = 1;
+    string Summary = 2;
+    Data data = 3;
+}
+
+message Forecast {
+    string summary = 1;
+    repeated Day days = 2;
+}
+
+message Day {
+    string weekday = 1;
+    string summary = 2;
+    Data data = 3;
+}
+
+message Data {
+    string dewPoint = 1;
+    string feelsLike = 2;
+    string humidity = 3;
+    string icon = 4;
+    string precipitationProbability = 5;
+    string precipitationType = 6;
+    string pressure = 7;
+    string temperature = 8;
+    string temperatureHigh = 9;
+    string temperatureLow = 10;
+    int64 timestamp = 11;
+    string wind = 12;
+}
+
+message Alert {
+    string message = 1;
+    string severity = 2;
+    string uri = 3;
+}
