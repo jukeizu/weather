@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package geocoding;
+
+service Geocode {
+    rpc Geocode(GeocodeRequest) returns (GeocodeReply) {}
+}
+
+message GeocodeRequest {
+    string location = 1;
+}
+
+message GeocodeReply {
+    double latitude = 1;
+    double longitude = 2;
+    string formattedAddress = 3;
+}
