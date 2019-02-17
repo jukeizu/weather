@@ -2,6 +2,7 @@ package weather
 
 import (
 	"context"
+	"errors"
 
 	"github.com/jukeizu/weather/api/protobuf-spec/geocodingpb"
 	"github.com/jukeizu/weather/api/protobuf-spec/weatherpb"
@@ -24,7 +25,7 @@ func (s server) Weather(ctx context.Context, req *weatherpb.WeatherRequest) (*we
 
 	location, err := s.GeocodeClient.Geocode(context.Background(), geocodeRequest)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("geocode client error: " + err.Error())
 	}
 
 	forecastRequest := darksky.ForecastRequest{

@@ -89,7 +89,6 @@ func main() {
 	g := run.Group{}
 
 	if flagServer {
-
 		grpcServer := newGrpcServer(logger)
 		server := NewServer(logger, grpcServer)
 
@@ -105,11 +104,18 @@ func main() {
 			os.Exit(1)
 		}
 
+		cacheConfig := cache.Config{
+			Address: cacheAddress,
+			Version: Version,
+		}
+
 		geocodingServer := geocoding.NewServer(mapsClient)
+		geocodingServer = geocoding.NewCacheServer(logger.With().Str("component", "geocoding").Logger(), geocodingServer, cacheConfig)
 		geocodingpb.RegisterGeocodeServer(grpcServer, geocodingServer)
 
 		geocodeClient := geocodingpb.NewGeocodeClient(clientConn)
 		weatherServer := weather.NewServer(darkskyClient, geocodeClient)
+		weatherServer = weather.NewCacheServer(logger, weatherServer, cacheConfig)
 		weatherpb.RegisterWeatherServer(grpcServer, weatherServer)
 
 		grpcAddr := ":" + grpcPort

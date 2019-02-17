@@ -4,37 +4,44 @@ import (
 	"context"
 	"time"
 
-	"github.com/go-kit/kit/log"
 	"github.com/jukeizu/cache"
 	"github.com/jukeizu/weather/api/protobuf-spec/weatherpb"
+	"github.com/rs/zerolog"
 )
 
-type cacheService struct {
-	logger  log.Logger
-	Service weatherpb.WeatherServer
-	Cache   cache.Cache
+type cacheServer struct {
+	logger zerolog.Logger
+	Server weatherpb.WeatherServer
+	Cache  cache.Cache
 }
 
-func NewCacheService(logger log.Logger, s weatherpb.WeatherServer, config cache.Config) weatherpb.WeatherServer {
+func NewCacheServer(logger zerolog.Logger, s weatherpb.WeatherServer, config cache.Config) weatherpb.WeatherServer {
 	cache := cache.New(config)
 
-	return &cacheService{logger, s, cache}
+	return &cacheServer{logger, s, cache}
 }
 
-func (s cacheService) Weather(ctx context.Context, req *weatherpb.WeatherRequest) (reply *weatherpb.WeatherReply, err error) {
+func (s cacheServer) Weather(ctx context.Context, req *weatherpb.WeatherRequest) (*weatherpb.WeatherReply, error) {
+	s.logger.Debug().Msgf("%+v", *req)
 	cacheResult := weatherpb.WeatherReply{}
 
-	cacheErr := s.Cache.Get(req, &cacheResult)
+	cacheErr := s.Cache.Get(*req, &cacheResult)
 	if cacheErr == nil {
+		s.logger.Debug().Msg("found cached reply")
 		return &cacheResult, nil
 	}
 
-	reply, err = s.Service.Weather(ctx, req)
+	s.logger.Debug().Err(cacheErr).Msg("could not fetch from cache")
+
+	reply, err := s.Server.Weather(ctx, req)
 	if err != nil {
 		return reply, err
 	}
 
-	err = s.Cache.Set(req, reply, time.Minute*20)
+	err = s.Cache.Set(*req, reply, time.Minute*20)
+	if err != nil {
+		s.logger.Debug().Err(err).Msg("could not set cache")
+	}
 
-	return
+	return reply, nil
 }
