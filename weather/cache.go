@@ -22,10 +22,9 @@ func NewCacheServer(logger zerolog.Logger, s weatherpb.WeatherServer, config cac
 }
 
 func (s cacheServer) Weather(ctx context.Context, req *weatherpb.WeatherRequest) (*weatherpb.WeatherReply, error) {
-	s.logger.Debug().Msgf("%+v", *req)
 	cacheResult := weatherpb.WeatherReply{}
 
-	cacheErr := s.Cache.Get(*req, &cacheResult)
+	cacheErr := s.Cache.Get(req, &cacheResult)
 	if cacheErr == nil {
 		s.logger.Debug().Msg("found cached reply")
 		return &cacheResult, nil
@@ -38,7 +37,7 @@ func (s cacheServer) Weather(ctx context.Context, req *weatherpb.WeatherRequest)
 		return reply, err
 	}
 
-	err = s.Cache.Set(*req, reply, time.Minute*20)
+	err = s.Cache.Set(req, reply, time.Minute*20)
 	if err != nil {
 		s.logger.Debug().Err(err).Msg("could not set cache")
 	}
