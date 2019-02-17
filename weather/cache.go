@@ -5,25 +5,24 @@ import (
 	"time"
 
 	"github.com/go-kit/kit/log"
-
-	pb "github.com/jukeizu/weather/api/weather"
-	"github.com/shawntoffel/services-core/cache"
+	"github.com/jukeizu/cache"
+	"github.com/jukeizu/weather/api/protobuf-spec/weatherpb"
 )
 
 type cacheService struct {
 	logger  log.Logger
-	Service pb.WeatherServer
+	Service weatherpb.WeatherServer
 	Cache   cache.Cache
 }
 
-func NewCacheService(logger log.Logger, s pb.WeatherServer, config cache.Config) pb.WeatherServer {
-	cache := cache.NewCache(config)
+func NewCacheService(logger log.Logger, s weatherpb.WeatherServer, config cache.Config) weatherpb.WeatherServer {
+	cache := cache.New(config)
 
 	return &cacheService{logger, s, cache}
 }
 
-func (s cacheService) Weather(ctx context.Context, req *pb.WeatherRequest) (reply *pb.WeatherReply, err error) {
-	cacheResult := pb.WeatherReply{}
+func (s cacheService) Weather(ctx context.Context, req *weatherpb.WeatherRequest) (reply *weatherpb.WeatherReply, err error) {
+	cacheResult := weatherpb.WeatherReply{}
 
 	cacheErr := s.Cache.Get(req, &cacheResult)
 	if cacheErr == nil {

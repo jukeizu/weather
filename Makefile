@@ -1,24 +1,37 @@
-VERSION=$(shell git describe --tags)
-BUILD=GOARCH=amd64 go build -v
+TAG=$(shell git describe --tags --always)
+VERSION=$(TAG:v%=%)
+REPO=jukeizu/weather
+GO=GO111MODULE=on go
+BUILD=GOARCH=amd64 $(GO) build -ldflags="-s -w -X main.Version=$(VERSION)" 
+PROTOFILES=$(wildcard api/protobuf-spec/*/*.proto)
+PBFILES=$(patsubst %.proto,%.pb.go, $(PROTOFILES))
 
-.PHONY: all deps test proto build clean
+.PHONY: all deps test proto build clean $(PROTOFILES)
 
-all: deps test build
-
+all: deps test build 
 deps:
-	go get -t -v ./...
+	$(GO) mod download
 
 test:
-	go vet ./...
-	go test -v -race ./...
-
-proto:
-	cd api/weather && protoc weather.proto --go_out=plugins=grpc:.
-	cd api/geocoding && protoc geocoding.proto --go_out=plugins=grpc:.
+	$(GO) vet ./...
+	$(GO) test -v -race ./...
 
 build:
-	for CMD in `ls cmd/services`; do $(BUILD) -o bin/$$CMD-service-$(VERSION) ./cmd/services/$$CMD; done
-	# for CMD in `ls cmd/listeners`; do $(BUILD) -o bin/$$CMD-listener-$(VERSION) ./cmd/listeners/$$CMD; done
+	$(BUILD) -o bin/weather-$(VERSION) .
+
+build-linux:
+	CGO_ENABLED=0 GOOS=linux $(BUILD) -a -installsuffix cgo -o bin/weather .
+
+docker-build:
+	docker build -t $(REPO):$(VERSION) .
+
+docker-deploy:
+	docker push $(REPO):$(VERSION)
+
+proto: $(PBFILES)
+
+%.pb.go: %.proto
+	cd $(dir $<) && protoc $(notdir $<) --go_out=plugins=grpc:.
 
 clean:
-	find bin -type f ! -name '*.toml' -delete -print
+	@find bin -type f ! -name '*.toml' -delete -print

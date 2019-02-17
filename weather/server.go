@@ -3,22 +3,22 @@ package weather
 import (
 	"context"
 
-	gpb "github.com/jukeizu/weather/api/geocoding"
-	wpb "github.com/jukeizu/weather/api/weather"
+	"github.com/jukeizu/weather/api/protobuf-spec/geocodingpb"
+	"github.com/jukeizu/weather/api/protobuf-spec/weatherpb"
 	"github.com/shawntoffel/darksky"
 )
 
-type service struct {
+type server struct {
 	DarkSky       darksky.DarkSky
-	GeocodeClient gpb.GeocodeClient
+	GeocodeClient geocodingpb.GeocodeClient
 }
 
-func NewService(darkskyClient darksky.DarkSky, geocodeClient gpb.GeocodeClient) wpb.WeatherServer {
-	return &service{darkskyClient, geocodeClient}
+func NewServer(darkskyClient darksky.DarkSky, geocodeClient geocodingpb.GeocodeClient) weatherpb.WeatherServer {
+	return &server{darkskyClient, geocodeClient}
 }
 
-func (s service) Weather(ctx context.Context, req *wpb.WeatherRequest) (*wpb.WeatherReply, error) {
-	geocodeRequest := &gpb.GeocodeRequest{
+func (s server) Weather(ctx context.Context, req *weatherpb.WeatherRequest) (*weatherpb.WeatherReply, error) {
+	geocodeRequest := &geocodingpb.GeocodeRequest{
 		Location: req.Location,
 	}
 

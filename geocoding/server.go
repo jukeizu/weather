@@ -4,19 +4,19 @@ import (
 	"context"
 	"errors"
 
-	pb "github.com/jukeizu/weather/api/geocoding"
+	"github.com/jukeizu/weather/api/protobuf-spec/geocodingpb"
 	"googlemaps.github.io/maps"
 )
 
-type service struct {
+type server struct {
 	Client *maps.Client
 }
 
-func NewService(client *maps.Client) pb.GeocodeServer {
-	return &service{client}
+func NewServer(client *maps.Client) geocodingpb.GeocodeServer {
+	return &server{client}
 }
 
-func (s service) Geocode(ctx context.Context, req *pb.GeocodeRequest) (*pb.GeocodeReply, error) {
+func (s server) Geocode(ctx context.Context, req *geocodingpb.GeocodeRequest) (*geocodingpb.GeocodeReply, error) {
 	geocodingRequest := maps.GeocodingRequest{
 		Address: req.Location,
 	}
@@ -31,7 +31,7 @@ func (s service) Geocode(ctx context.Context, req *pb.GeocodeRequest) (*pb.Geoco
 
 	result := results[0]
 
-	response := &pb.GeocodeReply{
+	response := &geocodingpb.GeocodeReply{
 		Latitude:         result.Geometry.Location.Lat,
 		Longitude:        result.Geometry.Location.Lng,
 		FormattedAddress: result.FormattedAddress,

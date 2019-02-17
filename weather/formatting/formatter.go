@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jukeizu/weather/services/weather/units"
+	"github.com/jukeizu/weather/weather/units"
 	"github.com/shawntoffel/darksky"
 )
 
@@ -146,4 +146,20 @@ func (f *ForecastFormatter) Bearing(m darksky.Measurement) string {
 	}
 
 	return ""
+}
+
+func getUnits(flags *darksky.Flags) units.Units {
+
+	if flags == nil {
+		return units.UsUnits{}
+	}
+
+	switch flags.Units {
+	case "us":
+		return units.UsUnits{}
+	case "si":
+		return units.SiUnits{}
+	default:
+		return units.UsUnits{}
+	}
 }

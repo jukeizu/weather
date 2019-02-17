@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package geocoding;
+package geocodingpb;
 
 service Geocode {
     rpc Geocode(GeocodeRequest) returns (GeocodeReply) {}

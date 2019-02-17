@@ -1,11 +1,10 @@
 package weather
 
 import (
+	gpb "github.com/jukeizu/weather/api/protobuf-spec/geocodingpb"
+	wpb "github.com/jukeizu/weather/api/protobuf-spec/weatherpb"
+	"github.com/jukeizu/weather/weather/formatting"
 	"github.com/shawntoffel/darksky"
-
-	gpb "github.com/jukeizu/weather/api/geocoding"
-	wpb "github.com/jukeizu/weather/api/weather"
-	"github.com/jukeizu/weather/services/weather/formatting"
 )
 
 type Mapper struct {
