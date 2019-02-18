@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  treediagram:
+    build: .
+    command: -D -cache.addr "redis:6379"
+    ports:
+      - "50052:50052"
+      - "10002:10002"
+    environment:
+      DARKSKY_TOKEN_FILE: /run/secrets/darksky
+      GOOGLE_MAPS_TOKEN_FILE: /run/secrets/google_maps
+    secrets:
+      - darksky
+      - google_maps
+    depends_on:
+      - redis
+  
+  redis:
+      image: "redis:alpine"
+
+secrets:
+  darksky:
+    file: $DARKSKY_TOKEN_FILE
+  google_maps:
+    file: $GOOGLE_MAPS_TOKEN_FILE

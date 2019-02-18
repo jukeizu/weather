@@ -1,0 +1,5 @@
+bin/
+Dockerfile
+*.md
+.travis.yml
+docker-compose.yml
