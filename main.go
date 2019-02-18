@@ -32,6 +32,7 @@ var Version = ""
 
 var (
 	flagVersion = false
+	flagDebug   = false
 	flagServer  = false
 	flagHandler = false
 
@@ -49,6 +50,7 @@ func parseConfig() {
 	flag.BoolVar(&flagServer, "server", false, "Run as server")
 	flag.BoolVar(&flagHandler, "handler", false, "Run as handler")
 	flag.BoolVar(&flagVersion, "v", false, "version")
+	flag.BoolVar(&flagDebug, "D", false, "enable debug logging")
 
 	flag.Parse()
 }
@@ -66,6 +68,11 @@ func main() {
 		Str("component", "weather").
 		Str("version", Version).
 		Logger()
+
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	if flagDebug {
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	}
 
 	grpcLoggerV2 := grpczerolog.New(logger.With().Str("transport", "grpc").Logger())
 	grpclog.SetLoggerV2(grpcLoggerV2)

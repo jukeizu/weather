@@ -1,9 +1,7 @@
 package treediagram
 
 import (
-	"bytes"
 	"context"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -69,15 +67,9 @@ func (h *handler) Weather(request contract.Request) (*contract.Response, error) 
 	}
 
 	if len(weather.Alerts) > 0 {
-		buffer := bytes.Buffer{}
-
-		for _, alert := range weather.Alerts {
-			buffer.WriteString(fmt.Sprintf("[%s](%s)\n", alert.Message, alert.Uri))
-		}
-
 		alerts := contract.EmbedField{
 			Name:  "Alerts",
-			Value: buffer.String(),
+			Value: generateAlertsSummary(weather.Alerts),
 		}
 
 		embed.Fields = append(embed.Fields, &alerts)
