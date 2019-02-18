@@ -16,6 +16,7 @@ import (
 	"github.com/jukeizu/weather/api/protobuf-spec/geocodingpb"
 	"github.com/jukeizu/weather/api/protobuf-spec/weatherpb"
 	"github.com/jukeizu/weather/geocoding"
+	"github.com/jukeizu/weather/treediagram"
 	"github.com/jukeizu/weather/weather"
 	"github.com/oklog/run"
 	"github.com/rs/xid"
@@ -35,12 +36,14 @@ var (
 	flagHandler = false
 
 	grpcPort       = "50052"
+	httpPort       = "10002"
 	serviceAddress = "localhost:" + grpcPort
 	cacheAddress   = cache.DefaultRedisAddress
 )
 
 func parseConfig() {
 	flag.StringVar(&grpcPort, "grpc.port", grpcPort, "grpc port for server")
+	flag.StringVar(&httpPort, "http.port", httpPort, "http port for handler")
 	flag.StringVar(&cacheAddress, "cache.addr", cacheAddress, "cache address")
 	flag.StringVar(&serviceAddress, "service.addr", serviceAddress, "sercice address if not local")
 	flag.BoolVar(&flagServer, "server", false, "Run as server")
@@ -124,6 +127,22 @@ func main() {
 			return server.Start(grpcAddr)
 		}, func(error) {
 			server.Stop()
+		})
+	}
+
+	if flagHandler {
+		client := weatherpb.NewWeatherClient(clientConn)
+		httpAddr := ":" + httpPort
+
+		handler := treediagram.NewHandler(logger, client, httpAddr)
+
+		g.Add(func() error {
+			return handler.Start()
+		}, func(error) {
+			err := handler.Stop()
+			if err != nil {
+				logger.Error().Err(err).Caller().Msg("couldn't stop handler")
+			}
 		})
 	}
 
