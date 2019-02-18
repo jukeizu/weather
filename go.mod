@@ -7,7 +7,6 @@ require (
 	github.com/google/uuid v1.1.0 // indirect
 	github.com/jnewmano/grpc-json-proxy v0.0.0-20180914194908-38a7fdf2bd5c
 	github.com/jukeizu/cache v0.0.3
-	github.com/jukeizu/contacts v0.2.1
 	github.com/jukeizu/contract v0.0.3
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/mattn/go-shellwords v1.0.3
@@ -18,7 +17,9 @@ require (
 	github.com/shawntoffel/darksky v1.2.3
 	github.com/stretchr/testify v1.3.0 // indirect
 	golang.org/x/net v0.0.0-20190213061140-3a22650c66bd
+	golang.org/x/sync v0.0.0-20181221193216-37e7f081c4d4 // indirect
 	golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a // indirect
+	golang.org/x/text v0.3.1-0.20180807135948-17ff2d5776d2 // indirect
 	golang.org/x/time v0.0.0-20181108054448-85acf8d2951c // indirect
 	google.golang.org/genproto v0.0.0-20190215211957-bd968387e4aa // indirect
 	google.golang.org/grpc v1.18.0
