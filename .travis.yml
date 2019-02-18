@@ -4,6 +4,7 @@ go:
 
 script:
   - make deps test
+  - make docker-pull
   - make docker-build
 
 before_deploy:
