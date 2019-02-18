@@ -65,6 +65,16 @@ func generateDayTitle(day *weatherpb.Day) string {
 	return buffer.String()
 }
 
+func generateAlertsSummary(alerts []*weatherpb.Alert) string {
+	buffer := bytes.Buffer{}
+
+	for _, alert := range alerts {
+		buffer.WriteString(fmt.Sprintf("[%s](%s)\n", alert.Message, alert.Uri))
+	}
+
+	return buffer.String()
+}
+
 func getEmojiForIcon(icon string) string {
 	emoji, found := iconMap[icon]
 	if !found {
