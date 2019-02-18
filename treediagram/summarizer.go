@@ -52,10 +52,9 @@ func generateDataSummary(data *weatherpb.Data) string {
 }
 
 func generateDayTitle(day *weatherpb.Day) string {
-	buffer := bytes.Buffer{}
-
 	data := day.Data
 
+	buffer := bytes.Buffer{}
 	buffer.WriteString(getEmojiForIcon(data.Icon))
 	buffer.WriteString(day.Weekday)
 
