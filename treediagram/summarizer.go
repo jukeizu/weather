@@ -23,6 +23,8 @@ var iconMap = map[string]string{
 	"tornado":             ":cloud_tornado:",
 }
 
+const finalDecisionFooter = "ツリーダイアグラム最終決定"
+
 func generateProbabilitySummary(data *weatherpb.Data) string {
 	buffer := bytes.Buffer{}
 

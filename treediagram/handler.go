@@ -38,16 +38,7 @@ func NewHandler(logger zerolog.Logger, client weatherpb.WeatherClient, addr stri
 }
 
 func (h *handler) Weather(request contract.Request) (*contract.Response, error) {
-	args, err := shellwords.Parse(request.Content)
-	if err != nil {
-		return nil, err
-	}
-
-	weatherRequest := weatherpb.WeatherRequest{
-		Location: strings.Join(args[1:], " "),
-	}
-
-	weather, err := h.client.Weather(context.Background(), &weatherRequest)
+	weather, err := h.lookupWeather(request.Content)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +64,7 @@ func (h *handler) Weather(request contract.Request) (*contract.Response, error) 
 			},
 		},
 		Footer: &contract.EmbedFooter{
-			Text: "ツリーダイアグラム最終決定",
+			Text: finalDecisionFooter,
 		},
 	}
 
@@ -100,7 +91,33 @@ func (h *handler) Weather(request contract.Request) (*contract.Response, error) 
 }
 
 func (h *handler) Forecast(request contract.Request) (*contract.Response, error) {
-	return &contract.Response{Messages: []*contract.Message{}}, nil
+	weather, err := h.lookupWeather(request.Content)
+	if err != nil {
+		return nil, err
+	}
+
+	embed := contract.Embed{
+		Title: weather.Location,
+		Color: 6139372,
+		Footer: &contract.EmbedFooter{
+			Text: finalDecisionFooter,
+		},
+	}
+
+	for _, day := range weather.Forecast.Days {
+		embedDay := contract.EmbedField{
+			Name:  generateDayTitle(day),
+			Value: day.Summary,
+		}
+
+		embed.Fields = append(embed.Fields, &embedDay)
+	}
+
+	message := contract.Message{
+		Embed: &embed,
+	}
+
+	return &contract.Response{Messages: []*contract.Message{&message}}, nil
 }
 
 func (h *handler) Start() error {
@@ -119,6 +136,24 @@ func (h *handler) Stop() error {
 	h.logger.Info().Msg("stopping")
 
 	return h.httpServer.Shutdown(context.Background())
+}
+
+func (h *handler) lookupWeather(content string) (*weatherpb.WeatherReply, error) {
+	args, err := shellwords.Parse(content)
+	if err != nil {
+		return nil, err
+	}
+
+	weatherRequest := weatherpb.WeatherRequest{
+		Location: strings.Join(args[1:], " "),
+	}
+
+	weather, err := h.client.Weather(context.Background(), &weatherRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	return weather, nil
 }
 
 func (h *handler) makeLoggingHttpHandlerFunc(name string, f func(contract.Request) (*contract.Response, error)) http.HandlerFunc {
