@@ -6,7 +6,7 @@ BUILD=GOARCH=amd64 $(GO) build -ldflags="-s -w -X main.Version=$(VERSION)"
 PROTOFILES=$(wildcard api/protobuf-spec/*/*.proto)
 PBFILES=$(patsubst %.proto,%.pb.go, $(PROTOFILES))
 
-.PHONY: all deps test proto build clean $(PROTOFILES)
+.PHONY: all deps test build build-linux docker-build docker-save docker-deploy proto clean $(PROTOFILES)
 
 all: deps test build 
 deps:
@@ -17,13 +17,16 @@ test:
 	$(GO) test -v -race ./...
 
 build:
-	$(BUILD) -o bin/weather-$(VERSION) .
+	$(BUILD) -o bin/weather-$(VERSION) 
 
 build-linux:
-	CGO_ENABLED=0 GOOS=linux $(BUILD) -a -installsuffix cgo -o bin/weather .
+	CGO_ENABLED=0 GOOS=linux $(BUILD) -a -installsuffix cgo -o bin/weather 
 
 docker-build:
 	docker build -t $(REPO):$(VERSION) .
+
+docker-save:
+	mkdir -p bin && docker save -o bin/image.tar $(REPO):$(VERSION)
 
 docker-deploy:
 	docker push $(REPO):$(VERSION)
