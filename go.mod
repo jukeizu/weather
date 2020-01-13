@@ -14,7 +14,7 @@ require (
 	github.com/rs/xid v1.2.1
 	github.com/rs/zerolog v1.11.0
 	github.com/sergi/go-diff v1.0.0 // indirect
-	github.com/shawntoffel/darksky v1.3.1
+	github.com/shawntoffel/darksky v1.4.0
 	github.com/stretchr/testify v1.3.0 // indirect
 	golang.org/x/net v0.0.0-20190213061140-3a22650c66bd
 	golang.org/x/sync v0.0.0-20181221193216-37e7f081c4d4 // indirect
