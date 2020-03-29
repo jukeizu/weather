@@ -1,5 +1,7 @@
 module github.com/jukeizu/weather
 
+go 1.11
+
 require (
 	github.com/cheapRoc/grpc-zerolog v0.0.0-20180425150930-27ca9d023ead
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -14,7 +16,7 @@ require (
 	github.com/rs/xid v1.2.1
 	github.com/rs/zerolog v1.11.0
 	github.com/sergi/go-diff v1.0.0 // indirect
-	github.com/shawntoffel/darksky v1.4.0
+	github.com/shawntoffel/darksky v1.5.0
 	github.com/stretchr/testify v1.3.0 // indirect
 	golang.org/x/net v0.0.0-20190213061140-3a22650c66bd
 	golang.org/x/sync v0.0.0-20181221193216-37e7f081c4d4 // indirect
