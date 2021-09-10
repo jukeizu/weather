@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/cheapRoc/grpc-zerolog"
+	grpczerolog "github.com/cheapRoc/grpc-zerolog"
 	_ "github.com/jnewmano/grpc-json-proxy/codec"
 	"github.com/jukeizu/cache"
 	"github.com/jukeizu/weather/api/protobuf-spec/geocodingpb"
@@ -21,6 +21,7 @@ import (
 	"github.com/oklog/run"
 	"github.com/rs/xid"
 	"github.com/rs/zerolog"
+	azweather "github.com/shawntoffel/azure-maps-go/weather"
 	"github.com/shawntoffel/darksky"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
@@ -42,7 +43,7 @@ var (
 	cacheAddress   = cache.DefaultRedisAddress
 )
 
-func parseConfig() {
+func init() {
 	flag.StringVar(&grpcPort, "grpc.port", grpcPort, "grpc port for server")
 	flag.StringVar(&httpPort, "http.port", httpPort, "http port for handler")
 	flag.StringVar(&cacheAddress, "cache.addr", cacheAddress, "cache address")
@@ -56,8 +57,6 @@ func parseConfig() {
 }
 
 func main() {
-	parseConfig()
-
 	if flagVersion {
 		fmt.Println(Version)
 		os.Exit(0)
@@ -106,6 +105,10 @@ func main() {
 		darkskyToken := readSecretsFile(logger, darkskyTokenFile)
 		darkskyClient := darksky.New(darkskyToken)
 
+		azmapsTokenFile := os.Getenv("AZURE_MAPS_TOKEN_FILE")
+		azmapsToken := readSecretsFile(logger, azmapsTokenFile)
+		azweatherClient := azweather.New(azmapsToken)
+
 		mapsTokenFile := os.Getenv("GOOGLE_MAPS_TOKEN_FILE")
 		mapsToken := readSecretsFile(logger, mapsTokenFile)
 		mapsClient, err := maps.NewClient(maps.WithAPIKey(mapsToken))
@@ -124,7 +127,7 @@ func main() {
 		geocodingpb.RegisterGeocodeServer(grpcServer, geocodingServer)
 
 		geocodeClient := geocodingpb.NewGeocodeClient(clientConn)
-		weatherServer := weather.NewServer(darkskyClient, geocodeClient)
+		weatherServer := weather.NewServer(darkskyClient, azweatherClient, geocodeClient)
 		weatherServer = weather.NewCacheServer(logger, weatherServer, cacheConfig)
 		weatherpb.RegisterWeatherServer(grpcServer, weatherServer)
 
@@ -196,7 +199,7 @@ func readSecretsFile(logger zerolog.Logger, filename string) string {
 }
 
 func interrupt(cancel <-chan struct{}) error {
-	c := make(chan os.Signal)
+	c := make(chan os.Signal, 0)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 
 	select {

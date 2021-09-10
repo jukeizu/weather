@@ -1,16 +1,15 @@
-package formatting
+package darkskysource
 
 import (
 	"fmt"
 	"strings"
 	"time"
 
-	"github.com/jukeizu/weather/weather/units"
 	"github.com/shawntoffel/darksky"
 )
 
 type ForecastFormatter struct {
-	Units units.Units
+	Units Units
 }
 
 func NewForecastFormatter(flags *darksky.Flags) ForecastFormatter {
@@ -148,18 +147,18 @@ func (f *ForecastFormatter) Bearing(m darksky.Measurement) string {
 	return ""
 }
 
-func getUnits(flags *darksky.Flags) units.Units {
+func getUnits(flags *darksky.Flags) Units {
 
 	if flags == nil {
-		return units.UsUnits{}
+		return UsUnits{}
 	}
 
 	switch flags.Units {
 	case "us":
-		return units.UsUnits{}
+		return UsUnits{}
 	case "si":
-		return units.SiUnits{}
+		return SiUnits{}
 	default:
-		return units.UsUnits{}
+		return UsUnits{}
 	}
 }
