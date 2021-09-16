@@ -5,13 +5,13 @@ package weatherpb;
 
 service Weather {
     rpc Weather(WeatherRequest) returns (WeatherReply) {}
+    rpc Plan(PlanRequest) returns (PlanReply) {}
 }
 
 message WeatherRequest {
     int64 time = 1;
     string location = 2;
     string units = 3;
-    string source = 4;
 }
 
 message WeatherReply {
@@ -21,6 +21,31 @@ message WeatherReply {
     Currently currently = 4;
     Forecast forecast = 5;
     repeated Alert alerts = 6;
+}
+
+message PlanRequest {
+    string location = 1;
+    bool daylight = 2;
+    DataRange wind = 3;
+    DataRange windGust = 5;
+    DataRange temperature = 6;
+    bool precipitation = 7;
+    string units = 8;
+    int32 duration = 9;
+}
+
+message DataRange {
+    double min = 1;
+    double max = 2;
+}
+
+message PlanReply {
+    string location = 1;
+    double Latitude = 2;
+    double Longitude = 3;
+    repeated Hour hours = 4;
+    string units = 5;
+    int64 generatedAt = 6;
 }
 
 message Currently {
@@ -37,6 +62,10 @@ message Forecast {
 message Day {
     string weekday = 1;
     string summary = 2;
+    Data data = 3;
+}
+
+message Hour {
     Data data = 3;
 }
 

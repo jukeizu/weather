@@ -21,7 +21,7 @@ import (
 	"github.com/oklog/run"
 	"github.com/rs/xid"
 	"github.com/rs/zerolog"
-	azweather "github.com/shawntoffel/azure-maps-go/weather"
+	"github.com/shawntoffel/azure-maps-go/azweather"
 	"github.com/shawntoffel/darksky"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"

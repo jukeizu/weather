@@ -44,3 +44,27 @@ func (s cacheServer) Weather(ctx context.Context, req *weatherpb.WeatherRequest)
 
 	return reply, nil
 }
+
+func (s cacheServer) Plan(ctx context.Context, req *weatherpb.PlanRequest) (*weatherpb.PlanReply, error) {
+	cacheResult := weatherpb.PlanReply{}
+
+	cacheErr := s.Cache.Get(req, &cacheResult)
+	if cacheErr == nil {
+		s.logger.Debug().Msg("found cached reply")
+		return &cacheResult, nil
+	}
+
+	s.logger.Debug().Err(cacheErr).Msg("could not fetch from cache")
+
+	reply, err := s.Server.Plan(ctx, req)
+	if err != nil {
+		return reply, err
+	}
+
+	err = s.Cache.Set(req, reply, time.Minute*20)
+	if err != nil {
+		s.logger.Debug().Err(err).Msg("could not set cache")
+	}
+
+	return reply, nil
+}

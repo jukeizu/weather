@@ -138,8 +138,6 @@ func (h *handler) lookupWeather(content string) (*weatherpb.WeatherReply, error)
 
 	weatherRequest := weatherpb.WeatherRequest{
 		Location: strings.Join(args[1:], " "),
-		Source:   "darksky",
-		Units:    "imperial",
 	}
 
 	weather, err := h.client.Weather(context.Background(), &weatherRequest)
