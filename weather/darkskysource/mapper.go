@@ -1,19 +1,18 @@
-package weather
+package darkskysource
 
 import (
 	gpb "github.com/jukeizu/weather/api/protobuf-spec/geocodingpb"
 	wpb "github.com/jukeizu/weather/api/protobuf-spec/weatherpb"
-	"github.com/jukeizu/weather/weather/formatting"
 	"github.com/shawntoffel/darksky"
 )
 
 type Mapper struct {
-	formatter formatting.ForecastFormatter
+	formatter ForecastFormatter
 	forecast  darksky.ForecastResponse
 }
 
 func NewMapper(forecast darksky.ForecastResponse) Mapper {
-	formatter := formatting.NewForecastFormatter(forecast.Flags)
+	formatter := NewForecastFormatter(forecast.Flags)
 
 	return Mapper{formatter, forecast}
 }
