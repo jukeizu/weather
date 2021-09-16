@@ -1,4 +1,4 @@
-package azmapssource
+package azsource
 
 import (
 	"strconv"

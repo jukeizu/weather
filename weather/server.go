@@ -7,7 +7,7 @@ import (
 
 	"github.com/jukeizu/weather/api/protobuf-spec/geocodingpb"
 	"github.com/jukeizu/weather/api/protobuf-spec/weatherpb"
-	"github.com/jukeizu/weather/weather/azmapssource"
+	"github.com/jukeizu/weather/weather/azsource"
 	"github.com/jukeizu/weather/weather/darkskysource"
 	"github.com/shawntoffel/azure-maps-go/azweather"
 	"github.com/shawntoffel/darksky"
@@ -111,7 +111,7 @@ func (s server) Plan(ctx context.Context, req *weatherpb.PlanRequest) (*weatherp
 		hours = append(hours, hour)
 	}
 
-	mapper := azmapssource.NewMapper(hours)
+	mapper := azsource.NewMapper(hours)
 
 	return mapper.AsPlanResponse(location, req.Units)
 }
