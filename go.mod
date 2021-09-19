@@ -9,7 +9,7 @@ require (
 	github.com/google/uuid v1.1.0 // indirect
 	github.com/jnewmano/grpc-json-proxy v0.0.0-20180914194908-38a7fdf2bd5c
 	github.com/jukeizu/cache v0.0.3
-	github.com/jukeizu/contract v0.0.3
+	github.com/jukeizu/contract v0.3.6
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/mattn/go-shellwords v1.0.3
 	github.com/oklog/run v1.0.0

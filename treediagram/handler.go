@@ -41,45 +41,7 @@ func (h *handler) Weather(request contract.Request) (*contract.Response, error) 
 		return nil, err
 	}
 
-	embed := contract.Embed{
-		Title: weather.Location,
-		Color: 6139372,
-		Fields: []*contract.EmbedField{
-			&contract.EmbedField{
-				Name:   getEmojiForIcon(weather.Currently.Data.Icon) + weather.Currently.Data.Temperature + " " + weather.Currently.Description,
-				Value:  weather.Currently.Summary + "\n",
-				Inline: true,
-			},
-			&contract.EmbedField{
-				Name:   "Probability",
-				Value:  generateProbabilitySummary(weather.Currently.Data),
-				Inline: true,
-			},
-			&contract.EmbedField{
-				Name:   "Data",
-				Value:  generateDataSummary(weather.Currently.Data),
-				Inline: true,
-			},
-		},
-		Footer: &contract.EmbedFooter{
-			Text: finalDecisionFooter,
-		},
-	}
-
-	if len(weather.Alerts) > 0 {
-		alerts := contract.EmbedField{
-			Name:  "Alerts",
-			Value: generateAlertsSummary(weather.Alerts),
-		}
-
-		embed.Fields = append(embed.Fields, &alerts)
-	}
-
-	message := contract.Message{
-		Embed: &embed,
-	}
-
-	return &contract.Response{Messages: []*contract.Message{&message}}, nil
+	return FormatWeatherResponse(weather)
 }
 
 func (h *handler) Forecast(request contract.Request) (*contract.Response, error) {
@@ -88,28 +50,16 @@ func (h *handler) Forecast(request contract.Request) (*contract.Response, error)
 		return nil, err
 	}
 
-	embed := contract.Embed{
-		Title: weather.Location,
-		Color: 6139372,
-		Footer: &contract.EmbedFooter{
-			Text: finalDecisionFooter,
-		},
+	return FormatForecastResponse(weather)
+}
+
+func (h *handler) Plan(request contract.Request) (*contract.Response, error) {
+	plan, err := h.lookupPlan(request)
+	if err != nil {
+		return FormatParseError(err)
 	}
 
-	for _, day := range weather.Forecast.Days {
-		embedDay := contract.EmbedField{
-			Name:  generateDayTitle(day),
-			Value: day.Summary,
-		}
-
-		embed.Fields = append(embed.Fields, &embedDay)
-	}
-
-	message := contract.Message{
-		Embed: &embed,
-	}
-
-	return &contract.Response{Messages: []*contract.Message{&message}}, nil
+	return FormatPlanResponse(plan)
 }
 
 func (h *handler) Start() error {
@@ -118,6 +68,7 @@ func (h *handler) Start() error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/weather", h.makeLoggingHttpHandlerFunc("weather", h.Weather))
 	mux.HandleFunc("/forecast", h.makeLoggingHttpHandlerFunc("forecast", h.Forecast))
+	mux.HandleFunc("/plan", h.makeLoggingHttpHandlerFunc("plan", h.Plan))
 
 	h.httpServer.Handler = mux
 
@@ -148,8 +99,22 @@ func (h *handler) lookupWeather(content string) (*weatherpb.WeatherReply, error)
 	return weather, nil
 }
 
+func (h *handler) lookupPlan(request contract.Request) (*weatherpb.PlanReply, error) {
+	req, err := ParsePlanRequest(request)
+	if err != nil {
+		return nil, err
+	}
+
+	weather, err := h.client.Plan(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	return weather, nil
+}
+
 func (h *handler) makeLoggingHttpHandlerFunc(name string, f func(contract.Request) (*contract.Response, error)) http.HandlerFunc {
-	contractHandlerFunc := contract.MakeHttpHandlerFunc(f)
+	contractHandlerFunc := contract.MakeRequestHttpHandlerFunc(f)
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer func(begin time.Time) {

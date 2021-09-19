@@ -24,5 +24,5 @@ func (f *Formatter) Title(title string) string {
 
 func (f *Formatter) SpeedWithBearing(w *azweather.Wind) string {
 	formattedSpeed := f.WeatherUnit(w.Speed)
-	return fmt.Sprintf("%s %s", w.Direction.LocalizedDescription, formattedSpeed)
+	return fmt.Sprintf("%s %s", formattedSpeed, w.Direction.LocalizedDescription)
 }
