@@ -51,15 +51,13 @@ func (m *Mapper) mapHour(dataPoint azweather.HourlyForecast) *wpb.Hour {
 
 func (m *Mapper) mapData(dataPoint azweather.HourlyForecast) *wpb.Data {
 	data := &wpb.Data{}
-	loc, _ := time.LoadLocation("America/Denver")
-	data.Icon = m.mapTime(dataPoint.Date).In(loc).String()
 	data.Timestamp = m.mapTime(dataPoint.Date).Unix()
 	data.DewPoint = m.formatter.WeatherUnit(dataPoint.DewPoint)
 	data.FeelsLike = m.formatter.WeatherUnit(dataPoint.RealFeelTemperature)
 	data.Humidity = strconv.Itoa(dataPoint.RelativeHumidity)
 	data.PrecipitationProbability = strconv.Itoa(dataPoint.PrecipitationProbability)
 	data.Temperature = m.formatter.WeatherUnit(dataPoint.Temperature)
-	data.Wind = m.formatter.SpeedWithBearing(dataPoint.Wind) + " gusting " + m.formatter.WeatherUnit(dataPoint.WindGust.Speed)
+	data.Wind = m.formatter.WeatherUnit(dataPoint.Wind.Speed) + " gusting " + m.formatter.WeatherUnit(dataPoint.WindGust.Speed)
 
 	return data
 }

@@ -43,9 +43,16 @@ message PlanReply {
     string location = 1;
     double Latitude = 2;
     double Longitude = 3;
-    repeated Hour hours = 4;
-    string units = 5;
-    int64 generatedAt = 6;
+    repeated Summary Summaries = 4;
+    repeated Hour hours = 5;
+    string units = 6;
+    int64 generatedAt = 7;
+}
+
+message Summary {
+    int64 timestamp = 1;
+    string
+
 }
 
 message Currently {

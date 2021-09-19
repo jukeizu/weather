@@ -8,6 +8,8 @@ github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGX
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
+github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
@@ -33,8 +35,8 @@ github.com/jnewmano/grpc-json-proxy v0.0.0-20180914194908-38a7fdf2bd5c h1:BabrRU
 github.com/jnewmano/grpc-json-proxy v0.0.0-20180914194908-38a7fdf2bd5c/go.mod h1:p90weUVX4yVbP76ZY9TzApwCCr8WZ5xwIxh8+JeFY0Y=
 github.com/jukeizu/cache v0.0.3 h1:sL4y2Rw77Ypdzu3W2opLBEFVzKSwHLQrKN4e9/3sB58=
 github.com/jukeizu/cache v0.0.3/go.mod h1:Xrh0N86j1vNsz9uftaFPM8b07sEPu+RnzMbxlKNYccg=
-github.com/jukeizu/contract v0.0.3 h1:RD34qsJhyyXhpb0wENT8yA84EIMLHb8l4w7534Qm128=
-github.com/jukeizu/contract v0.0.3/go.mod h1:aVjy5DMYaMeau/X9geP9BQczGhhM99ppGf+gpRCVr+c=
+github.com/jukeizu/contract v0.3.6 h1:nRqpHpPbCxNVEfBdKqp0hkFFlacxjGHplSLsYnm8BWk=
+github.com/jukeizu/contract v0.3.6/go.mod h1:cKAwUQ6vAr+3Nbuq8nmsdf/ngPkOSRfXcSJ+Yuh4gXc=
 github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
