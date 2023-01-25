@@ -17,7 +17,7 @@ require (
 	github.com/rs/zerolog v1.11.0
 	github.com/sergi/go-diff v1.0.0 // indirect
 	github.com/shawntoffel/azure-maps-go v0.0.1
-	github.com/shawntoffel/darksky v1.5.0
+	github.com/shawntoffel/darksky v1.6.0
 	github.com/stretchr/testify v1.3.0 // indirect
 	golang.org/x/text v0.3.1-0.20180807135948-17ff2d5776d2 // indirect
 	golang.org/x/time v0.0.0-20181108054448-85acf8d2951c // indirect
