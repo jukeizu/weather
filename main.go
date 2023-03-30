@@ -103,6 +103,11 @@ func main() {
 
 		darkskyTokenFile := os.Getenv("DARKSKY_TOKEN_FILE")
 		darkskyToken := readSecretsFile(logger, darkskyTokenFile)
+		darkSkyBaseURL := os.Getenv("DARKSKY_API_URL")
+		if darkSkyBaseURL != "" {
+			darksky.BaseUrl = darkSkyBaseURL
+		}
+
 		darkskyClient := darksky.New(darkskyToken)
 
 		azmapsTokenFile := os.Getenv("AZURE_MAPS_TOKEN_FILE")
